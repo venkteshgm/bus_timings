@@ -1,8 +1,8 @@
 // === FIREBASE CONFIGURATION ===
 const firebaseConfig = {
   apiKey: "AIzaSyDLu-9iYvE0nxHKW5xGpyby0GvSG8UcdEA",
-  // Use the current domain as authDomain to route through the Vercel proxy
-  authDomain: window.location.host,
+  // Reverted to default authDomain to prevent Google Cloud redirect_uri mismatch errors
+  authDomain: "next-bus-tracker.firebaseapp.com",
   projectId: "next-bus-tracker",
   storageBucket: "next-bus-tracker.firebasestorage.app",
   messagingSenderId: "929357337561",
