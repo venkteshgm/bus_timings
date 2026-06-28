@@ -1,0 +1,12 @@
+{
+  "name": "trimet-bus-tracker",
+  "version": "1.0.0",
+  "description": "Serverless SPA for tracking TriMet bus arrivals",
+  "main": "api/bus-times.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}
