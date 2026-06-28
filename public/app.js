@@ -1,8 +1,8 @@
 // === FIREBASE CONFIGURATION ===
 const firebaseConfig = {
   apiKey: "AIzaSyDLu-9iYvE0nxHKW5xGpyby0GvSG8UcdEA",
-  // Reverted to default authDomain to prevent Google Cloud redirect_uri mismatch errors
-  authDomain: "next-bus-tracker.firebaseapp.com",
+  // Use the current domain as authDomain to route through the Vercel proxy
+  authDomain: window.location.host,
   projectId: "next-bus-tracker",
   storageBucket: "next-bus-tracker.firebasestorage.app",
   messagingSenderId: "929357337561",
@@ -55,6 +55,11 @@ window.firebaseTools.onAuthStateChanged(auth, async (user) => {
         dashboardSection.classList.add('hidden');
     }
 });
+
+const debugUri = document.getElementById('debug-uri');
+if (debugUri) {
+    debugUri.textContent = `https://${window.location.host}/__/auth/handler`;
+}
 
 // Handle redirect results for mobile
 window.firebaseTools.getRedirectResult(auth).catch((error) => {
