@@ -1,20 +1,5 @@
+require('dotenv').config();
 const admin = require('firebase-admin');
-
-// Initialize Firebase Admin (only once per instance)
-if (!admin.apps.length) {
-  // If running locally or on Vercel with proper env vars
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      }),
-    });
-  } catch (error) {
-    console.error('Firebase Admin initialization error', error);
-  }
-}
 
 // Hardcoded list of allowed emails
 const ALLOWED_EMAILS = [
@@ -23,6 +8,22 @@ const ALLOWED_EMAILS = [
 ];
 
 module.exports = async (req, res) => {
+  // Initialize Firebase Admin lazily to ensure env vars are loaded
+  if (!admin.apps.length) {
+    try {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        }),
+      });
+    } catch (error) {
+      console.error('Firebase Admin initialization error', error);
+      return res.status(500).json({ error: 'Server configuration error' });
+    }
+  }
+
   // 1. Verify Authorization Header
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
