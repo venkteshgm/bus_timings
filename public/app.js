@@ -1,8 +1,9 @@
 // === FIREBASE CONFIGURATION ===
 const firebaseConfig = {
   apiKey: "AIzaSyDLu-9iYvE0nxHKW5xGpyby0GvSG8UcdEA",
-  // Use the current domain as authDomain to route through the Vercel proxy
-  authDomain: window.location.host,
+  // Use the Vercel proxy for production (bypasses mobile tracking prevention), 
+  // but use the default Firebase domain for localhost to avoid HTTPS forcing errors
+  authDomain: window.location.hostname === 'localhost' ? "next-bus-tracker.firebaseapp.com" : window.location.host,
   projectId: "next-bus-tracker",
   storageBucket: "next-bus-tracker.firebasestorage.app",
   messagingSenderId: "929357337561",
@@ -56,21 +57,15 @@ window.firebaseTools.onAuthStateChanged(auth, async (user) => {
     }
 });
 
-const debugUri = document.getElementById('debug-uri');
-if (debugUri) {
-    debugUri.textContent = `https://${window.location.host}/__/auth/handler`;
-}
-
-// Handle redirect results for mobile
-window.firebaseTools.getRedirectResult(auth).catch((error) => {
-    authError.textContent = `Login failed: ${error.message}`;
-    authError.classList.remove('hidden');
-});
 
 // Login Handler
 loginBtn.addEventListener('click', () => {
     authError.classList.add('hidden');
-    window.firebaseTools.signInWithRedirect(auth, provider);
+    window.firebaseTools.signInWithPopup(auth, provider)
+        .catch((error) => {
+            authError.textContent = `Login failed: ${error.message}`;
+            authError.classList.remove('hidden');
+        });
 });
 
 // Logout Handler
