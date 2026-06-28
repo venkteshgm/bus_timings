@@ -63,7 +63,17 @@ module.exports = async (req, res) => {
     const arrivals = trimetData.resultSet.arrival || [];
     
     const filteredArrivals = arrivals
-      .filter(arrival => arrival.route === 47)
+      .filter(arrival => {
+        if (arrival.route !== 47) return false;
+        
+        // For Intel RA-1 and RA-3, only include buses headed to Hillsboro TC
+        if (arrival.locid === 14593 || arrival.locid === 14595) {
+          const sign = arrival.shortSign || arrival.headsign || "";
+          return sign.toLowerCase().includes('hillsboro');
+        }
+        
+        return true;
+      })
       .map(arrival => ({
         stopId: arrival.locid,
         estimatedTime: arrival.estimated || arrival.scheduled,

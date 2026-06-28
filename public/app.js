@@ -21,7 +21,7 @@ const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const authError = document.getElementById('auth-error');
 const dataError = document.getElementById('data-error');
-const userEmailSpan = document.getElementById('user-email');
+const userNameSpan = document.getElementById('user-name');
 const refreshBtn = document.getElementById('refresh-btn');
 const lastUpdatedText = document.getElementById('last-updated-text');
 const spinner = document.getElementById('loading-spinner');
@@ -42,7 +42,7 @@ window.firebaseTools.onAuthStateChanged(auth, async (user) => {
         // User is signed in
         authSection.classList.add('hidden');
         dashboardSection.classList.remove('hidden');
-        userEmailSpan.textContent = user.email;
+        userNameSpan.textContent = user.displayName ? user.displayName.split(' ')[0] : user.email;
         
         // Get the JWT token for the backend
         currentUserToken = await user.getIdToken();
